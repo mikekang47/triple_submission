@@ -16,11 +16,14 @@ import javax.persistence.*;
 public class Mileage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false)
     private Long id;
 
     @Column(name = "action")
     private String action;
 
+    @OneToOne
+    @JoinColumn(name = "REVIEW_ID")
+    private Review review;
 
 }
