@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -29,4 +31,7 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "PLACE_ID")
     private Place place;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "review")
+    private List<AttachedPhoto> attachedPhotoList = new ArrayList<>();
 }
