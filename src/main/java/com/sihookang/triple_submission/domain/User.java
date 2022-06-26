@@ -1,9 +1,6 @@
 package com.sihookang.triple_submission.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "USER")
 public class User {
     @Id
@@ -22,5 +20,10 @@ public class User {
     private UUID id;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Review> reviewList = new ArrayList<>();
+
+    @Column(name = "POINT", nullable = false)
+    @Builder.Default
+    private Integer point = 0;
 }
