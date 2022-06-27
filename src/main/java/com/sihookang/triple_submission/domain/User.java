@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "USER")
 public class User {
     @Id
@@ -23,13 +25,6 @@ public class User {
     @Column(name = "POINT", nullable = false)
     @Builder.Default
     private Integer point = 0;
-
-    @Builder
-    public User(UUID id, List<Review> reviewList, Integer point) {
-        this.id = id;
-        this.reviewList = reviewList;
-        this.point = point;
-    }
 
     public void addReview(Review review) {
         this.reviewList.add(review);
