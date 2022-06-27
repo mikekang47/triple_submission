@@ -2,6 +2,7 @@ package com.sihookang.triple_submission.applications;
 
 import com.sihookang.triple_submission.domain.Review;
 import com.sihookang.triple_submission.domain.User;
+import com.sihookang.triple_submission.errors.UserNotFoundException;
 import com.sihookang.triple_submission.infra.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -44,6 +46,13 @@ class UserServiceTest {
 
         assertThat(user.getId()).isEqualTo(VALID_ID);
 
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 id로 사용자를 조회하면 에러를 발생시킨다.")
+    void getUserWithInvalidId() {
+        assertThatThrownBy(() -> userService.getUser(INVALID_ID))
+                .isInstanceOf(UserNotFoundException.class);
     }
 
 }
