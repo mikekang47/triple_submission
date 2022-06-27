@@ -2,6 +2,7 @@ package com.sihookang.triple_submission.applications;
 
 import com.sihookang.triple_submission.domain.Place;
 import com.sihookang.triple_submission.domain.Review;
+import com.sihookang.triple_submission.errors.PlaceNotFoundException;
 import com.sihookang.triple_submission.infra.PlaceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -43,6 +45,12 @@ class PlaceServiceTest {
         Place place = placeService.getPlace(VALID_ID);
 
         assertThat(place.getId()).isEqualTo(VALID_ID);
+    }
+
+    @Test
+    void getPlaceWithInvalidId() {
+        assertThatThrownBy(() -> placeService.getPlace(INVALID_ID))
+                .isInstanceOf(PlaceNotFoundException.class);
     }
 
 }
