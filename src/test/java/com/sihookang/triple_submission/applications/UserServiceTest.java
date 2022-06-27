@@ -26,6 +26,7 @@ class UserServiceTest {
 
     private final UUID VALID_ID = UUID.fromString("3ede0ef2-92b7-4817-a5f3-0c575361f745");
     private final UUID INVALID_ID = UUID.fromString("4ede0ef2-92b7-4817-a5f3-0c575361f745");
+    private final UUID DELETED_ID = UUID.fromString("5ede0ef2-92b7-4817-a5f3-0c575361f745");
 
     @BeforeEach
     void setUp() {
@@ -36,6 +37,8 @@ class UserServiceTest {
                 .build();
 
         given(userRepository.findById(VALID_ID)).willReturn(Optional.of(user));
+
+        given(userRepository.findById(DELETED_ID)).willThrow(UserNotFoundException.class);
 
     }
 
@@ -55,4 +58,10 @@ class UserServiceTest {
                 .isInstanceOf(UserNotFoundException.class);
     }
 
+    @Test
+    @DisplayName("삭제된 사용자의 id로 사용자를 조회하면 에러를 발생시킨다.")
+    void getUserWithDeletedId() {
+        assertThatThrownBy(() -> userService.getUser(DELETED_ID))
+                .isInstanceOf(UserNotFoundException.class);
+    }
 }
