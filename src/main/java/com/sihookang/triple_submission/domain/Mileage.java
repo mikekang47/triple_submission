@@ -1,16 +1,12 @@
 package com.sihookang.triple_submission.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name = "MILEAGE")
 public class Mileage extends BaseTimeEntity{
@@ -26,4 +22,10 @@ public class Mileage extends BaseTimeEntity{
     @JoinColumn(name = "REVIEW_ID")
     private Review review;
 
+    @Builder
+    public Mileage(Long id, String action, Review review) {
+        this.id = id;
+        this.action = action;
+        this.review = review;
+    }
 }
