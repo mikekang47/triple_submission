@@ -2,6 +2,7 @@ package com.sihookang.triple_submission.controllers;
 
 import com.sihookang.triple_submission.dto.ErrorResponse;
 import com.sihookang.triple_submission.errors.InvalidTypeException;
+import com.sihookang.triple_submission.errors.PhotoNotFoundException;
 import com.sihookang.triple_submission.errors.PlaceNotFoundException;
 import com.sihookang.triple_submission.errors.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class ControllerErrorAdvice {
     @ExceptionHandler(PlaceNotFoundException.class)
     public ErrorResponse handlePlaceNotFoundException() {
         return new ErrorResponse("Place not found");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PhotoNotFoundException.class)
+    public ErrorResponse handlePhotoNotFoundException() {
+        return new ErrorResponse("Photo not found");
     }
 
 }
