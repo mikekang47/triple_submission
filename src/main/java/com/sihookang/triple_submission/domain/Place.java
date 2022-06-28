@@ -1,9 +1,12 @@
 package com.sihookang.triple_submission.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,15 +17,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "PLACE")
 public class Place {
     @Id
-    @Column(name = "PLACE_ID", nullable = false)
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "PLACE_ID", nullable = false, columnDefinition = "BINARY(16)")
+    @GenericGenerator(
+            name="UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private UUID id;
 
     @OneToMany(mappedBy = "place",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @JsonManagedReference
     private List<Review> reviewList = new ArrayList<>();
 
     @Builder
