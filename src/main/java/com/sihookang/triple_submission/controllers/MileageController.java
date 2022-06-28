@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Client의 요청을 처리하는 클래스 입니다.
+ */
 @RestController
 @RequestMapping("/events")
 public class MileageController {
@@ -23,6 +26,11 @@ public class MileageController {
         this.mileageService = mileageService;
     }
 
+    /**
+     * 마일리지 적립에 관련된 데이터를 받아와 마일리지를 적립합니다.
+     * @param mileageData 마일리지 데이터
+     * @return 적립된 객체
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mileage create(@RequestBody @Valid MileageData mileageData) {
