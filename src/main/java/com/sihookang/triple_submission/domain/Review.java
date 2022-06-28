@@ -17,7 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "REVIEW")
 public class Review {
     @Id
