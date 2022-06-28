@@ -1,9 +1,13 @@
 package com.sihookang.triple_submission.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,10 +17,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "REVIEW")
 public class Review {
     @Id
-    @Column(name = "REVIEW_ID", nullable = false)
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "REVIEW_ID", nullable = false, columnDefinition = "BINARY(16)")
+    @GenericGenerator(
+            name="UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private UUID id;
 
     @Column(name = "CONTENT")
@@ -24,13 +34,16 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "PLACE_ID")
+    @JsonBackReference
     private Place place;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "review")
+    @JsonManagedReference
     private List<AttachedPhoto> attachedPhotoList = new ArrayList<>();
 
     @Builder
@@ -40,6 +53,10 @@ public class Review {
         this.user = user;
         this.place = place;
         this.attachedPhotoList = attachedPhotoList;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setUser(User user) {
