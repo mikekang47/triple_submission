@@ -1,17 +1,18 @@
 package com.sihookang.triple_submission.controllers;
 
 
-import com.sihookang.triple_submission.applications.MileageService;
-import com.sihookang.triple_submission.applications.UserService;
-import com.sihookang.triple_submission.domain.Mileage;
-import com.sihookang.triple_submission.domain.User;
+import com.sihookang.triple_submission.applications.*;
+import com.sihookang.triple_submission.domain.*;
 import com.sihookang.triple_submission.dto.MileageData;
+import com.sihookang.triple_submission.errors.ActionNotFoundException;
 import com.sihookang.triple_submission.errors.InvalidTypeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Client의 요청을 처리하는 클래스 입니다.
@@ -20,10 +21,17 @@ import javax.validation.Valid;
 @RequestMapping("/events")
 public class MileageController {
     private final MileageService mileageService;
-    private UserService userService;
+    private final UserService userService;
+    private final ReviewService reviewService;
+    private final PlaceService placeService;
+    private final AttachedPhotoService attachedPhotoService;
 
-    public MileageController(MileageService mileageService) {
+    public MileageController(MileageService mileageService, UserService userService, ReviewService reviewService, PlaceService placeService, AttachedPhotoService attachedPhotoService) {
         this.mileageService = mileageService;
+        this.userService = userService;
+        this.reviewService = reviewService;
+        this.placeService = placeService;
+        this.attachedPhotoService = attachedPhotoService;
     }
 
     /**
@@ -38,8 +46,22 @@ public class MileageController {
         if(!type.equals("REVIEW")) {
             throw new InvalidTypeException(type);
         }
-        User user = userService.getUser(mileageData.getUserId());
+        User user = userService.getUser(UUID.fromString(mileageData.getUserId()));
+        Review review = reviewService.getReview(mileageData.getReviewId());
+        Place place = placeService.getPlace(mileageData.getPlaceId());
+        List<AttachedPhoto> photoList = attachedPhotoService.getPhotos(mileageData.getAttachedPhotoIds());
 
-        return new Mileage();
+        String action = mileageData.getAction();
+
+        switch (action) {
+            case "ADD":
+                return mileageService.createMileage(user, review, place, photoList);
+            case "MOD":
+                return mileageService.modifyMileage(user, review, place, photoList);
+            case "DELETE":
+                return mileageService.deleteMileage(user, review, place, photoList);
+            default:
+                throw new ActionNotFoundException(action);
+        }
     }
 }
