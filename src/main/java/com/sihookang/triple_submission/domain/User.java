@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,4 +25,12 @@ public class User {
     @Column(name = "POINT", nullable = false)
     @Builder.Default
     private Integer point = 0;
+
+    public void addReview(Review review) {
+        this.reviewList.add(review);
+
+        if(review.getUser() != this) {
+            review.setUser(this);
+        }
+    }
 }

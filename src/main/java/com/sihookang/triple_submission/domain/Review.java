@@ -1,6 +1,6 @@
 package com.sihookang.triple_submission.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name = "REVIEW")
 public class Review {
@@ -34,4 +32,37 @@ public class Review {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "review")
     private List<AttachedPhoto> attachedPhotoList = new ArrayList<>();
+
+    @Builder
+    public Review(UUID id, String content, User user, Place place, List<AttachedPhoto> attachedPhotoList) {
+        this.id = id;
+        this.content = content;
+        this.user = user;
+        this.place = place;
+        this.attachedPhotoList = attachedPhotoList;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+
+        if(!user.getReviewList().contains(this)) {
+            user.getReviewList().add(this);
+        }
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+
+        if(!place.getReviewList().contains(this)) {
+            place.getReviewList().add(this);
+        }
+    }
+
+    public void addPhoto(AttachedPhoto photo) {
+        this.attachedPhotoList.add(photo);
+
+        if(photo.getReview() != this) {
+            photo.setReview(this);
+        }
+    }
 }
