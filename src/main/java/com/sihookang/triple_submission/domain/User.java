@@ -1,6 +1,10 @@
 package com.sihookang.triple_submission.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,11 +19,17 @@ import java.util.UUID;
 @Table(name = "USER")
 public class User {
     @Id
-    @Column(name = "USER_ID", nullable = false)
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "USER_ID", nullable = false, columnDefinition = "BINARY(16)")
+    @GenericGenerator(
+            name="UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private UUID id;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
+    @JsonManagedReference
     private List<Review> reviewList = new ArrayList<>();
 
     @Column(name = "POINT", nullable = false)
@@ -32,5 +42,9 @@ public class User {
         if(review.getUser() != this) {
             review.setUser(this);
         }
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
     }
 }
