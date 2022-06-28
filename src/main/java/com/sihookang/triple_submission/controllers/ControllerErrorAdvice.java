@@ -61,5 +61,16 @@ public class ControllerErrorAdvice {
         return new ErrorResponse("Review not found");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ActionNotFoundException.class)
+    public ErrorResponse handleActionNotFoundException() {
+        return new ErrorResponse("Action not found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IdNotMatchException.class)
+    public ErrorResponse handleIdNotMatchException() {
+        return new ErrorResponse("Id Not Match");
+    }
 
 }
