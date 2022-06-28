@@ -1,10 +1,7 @@
 package com.sihookang.triple_submission.controllers;
 
 import com.sihookang.triple_submission.dto.ErrorResponse;
-import com.sihookang.triple_submission.errors.InvalidTypeException;
-import com.sihookang.triple_submission.errors.PhotoNotFoundException;
-import com.sihookang.triple_submission.errors.PlaceNotFoundException;
-import com.sihookang.triple_submission.errors.UserNotFoundException;
+import com.sihookang.triple_submission.errors.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,5 +54,12 @@ public class ControllerErrorAdvice {
     public ErrorResponse handlePhotoNotFoundException() {
         return new ErrorResponse("Photo not found");
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ErrorResponse handleReviewNotFoundException() {
+        return new ErrorResponse("Review not found");
+    }
+
 
 }
