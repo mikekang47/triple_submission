@@ -15,17 +15,17 @@ public class Mileage extends BaseTimeEntity{
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "action")
-    private String action;
+    @Column(name = "type")
+    private String type;
 
     @OneToOne
     @JoinColumn(name = "REVIEW_ID")
     private Review review;
 
     @Builder
-    public Mileage(Long id, String action, Review review) {
+    public Mileage(Long id, String type, Review review) {
         this.id = id;
-        this.action = action;
+        this.type = type;
         this.review = review;
     }
 }
