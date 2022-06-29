@@ -27,4 +27,8 @@ public class PlaceService {
         return placeRepository.findById(id)
                 .orElseThrow(() -> new PlaceNotFoundException(id));
     }
+
+    public Place createPlace() {
+        return placeRepository.save(new Place());
+    }
 }
