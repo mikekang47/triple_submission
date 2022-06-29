@@ -5,6 +5,7 @@ import com.sihookang.triple_submission.errors.PhotoNotFoundException;
 import com.sihookang.triple_submission.infra.AttachedPhotoRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
  * 리뷰에 첨부된 사진에 관련된 실제 처리를 담당하는 클래스입니다.
  */
 @Service
+@Transactional
 public class AttachedPhotoService {
     private final AttachedPhotoRepository attachedPhotoRepository;
 

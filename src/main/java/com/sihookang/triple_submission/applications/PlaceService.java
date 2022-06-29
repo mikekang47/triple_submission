@@ -5,12 +5,14 @@ import com.sihookang.triple_submission.errors.PlaceNotFoundException;
 import com.sihookang.triple_submission.infra.PlaceRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 /**
  * 장소와 관련된 내부 처리를 담당하는 클래스입니다.
  */
 @Service
+@Transactional
 public class PlaceService {
     private final PlaceRepository placeRepository;
 

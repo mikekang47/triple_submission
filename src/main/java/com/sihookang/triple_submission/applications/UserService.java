@@ -5,6 +5,7 @@ import com.sihookang.triple_submission.errors.UserNotFoundException;
 import com.sihookang.triple_submission.infra.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
  * User와 관련된 내부 처리를 담당하는 클래스입니다.
  */
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
