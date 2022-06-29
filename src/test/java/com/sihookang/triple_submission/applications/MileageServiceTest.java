@@ -67,6 +67,7 @@ class MileageServiceTest {
                     .id(source.getId())
                     .review(source.getReview())
                     .type("REVIEW")
+                    .point(2)
                     .build();
         });
 
@@ -82,6 +83,7 @@ class MileageServiceTest {
         Mileage mileage = mileageService.createMileage(user, review, place, photoList);
 
         assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
+        assertThat(mileage.getPoint()).isEqualTo(2);
     }
 
 }
