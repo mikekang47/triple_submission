@@ -17,10 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
-    private ReviewService reviewService;
-    private PlaceService placeService;
-    private AttachedPhotoService attachedPhotoService;
-    private UserService userService;
+    private final ReviewService reviewService;
+    private final PlaceService placeService;
+    private final AttachedPhotoService attachedPhotoService;
+    private final UserService userService;
 
     public ReviewController(ReviewService reviewService, PlaceService placeService, AttachedPhotoService attachedPhotoService, UserService userService) {
         this.reviewService = reviewService;

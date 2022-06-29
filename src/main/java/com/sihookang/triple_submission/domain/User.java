@@ -1,10 +1,8 @@
 package com.sihookang.triple_submission.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "USER")
+@Table(name = "USER", indexes = {
+        @Index(name = "idx_user", columnList = "id, review.id")
+})
 public class User {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -35,6 +35,12 @@ public class User {
     @Column(name = "POINT", nullable = false)
     @Builder.Default
     private Integer point = 0;
+
+    public User(UUID id, List<Review> reviewList) {
+        this.id = id;
+        this.reviewList = reviewList;
+        this.point = 0;
+    }
 
     public void addReview(Review review) {
         this.reviewList.add(review);

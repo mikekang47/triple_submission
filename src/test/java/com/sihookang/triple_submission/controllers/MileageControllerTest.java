@@ -2,7 +2,6 @@ package com.sihookang.triple_submission.controllers;
 
 import com.sihookang.triple_submission.applications.*;
 import com.sihookang.triple_submission.domain.*;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
@@ -22,6 +19,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,6 +80,7 @@ class MileageControllerTest {
                 .id(VALID_MILEAGE_ID)
                 .review(review)
                 .type("REVIEW")
+                .point(2)
                 .build();
         
         given(mileageService.createMileage(any(User.class), any(Review.class), any(Place.class), anyList())).willReturn(mileage);
@@ -98,6 +97,8 @@ class MileageControllerTest {
                     .type("REVIEW")
                     .build();
         });
+
+        given(mileageService.getMileage(VALID_MILEAGE_ID)).willReturn(mileage);
 
 
     }
@@ -162,4 +163,12 @@ class MileageControllerTest {
                 .andExpect(status().isOk());
     }
 
+
+    @Test
+    @DisplayName("존재하는 마일리지의 id로 포인트를 조회하는 경우 포인트를 반환한다.")
+    void getPointWithValidId() throws Exception {
+        mvc.perform(get("/events/" + VALID_MILEAGE_ID))
+                .andExpect(content().string(containsString("2")))
+                .andExpect(status().isOk());
+    }
 }

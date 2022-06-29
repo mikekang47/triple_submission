@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 
 class AttachedPhotoServiceTest {
     private AttachedPhotoService attachedPhotoService;
-    private AttachedPhotoRepository attachedPhotoRepository = mock(AttachedPhotoRepository.class);
+    private final AttachedPhotoRepository attachedPhotoRepository = mock(AttachedPhotoRepository.class);
     private final List<UUID> VALID_IDS = List.of(UUID.fromString("e4d1a64e-a531-46de-88d0-ff0ed70c0bb8"));
     private final List<UUID> INVALID_IDS = List.of(UUID.fromString("e4d1a64e-a531-46de-88d0-ff0ed70c0bb9"));
 

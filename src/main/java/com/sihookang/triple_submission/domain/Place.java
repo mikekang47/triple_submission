@@ -1,7 +1,6 @@
 package com.sihookang.triple_submission.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "PLACE")
+@Table(name = "PLACE", indexes = {
+        @Index(name = "idx__place", columnList = "id, review.id")
+})
 public class Place {
     @Id
     @GeneratedValue(generator = "UUID")

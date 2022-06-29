@@ -70,4 +70,11 @@ public class MileageController {
                 throw new ActionNotFoundException(action);
         }
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public int getMileagePoint(@PathVariable UUID id) {
+        Mileage mileage = mileageService.getMileage(id);
+        return mileage.getPoint();
+    }
 }

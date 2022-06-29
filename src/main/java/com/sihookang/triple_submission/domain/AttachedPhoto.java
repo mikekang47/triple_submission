@@ -1,7 +1,6 @@
 package com.sihookang.triple_submission.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -12,7 +11,9 @@ import java.util.UUID;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Table(name = "ATTACHED_PHOTO")
+@Table(name = "ATTACHED_PHOTO", indexes = {
+        @Index(name = "idx__photo", columnList = "id, review.id")
+})
 public class AttachedPhoto extends BaseTimeEntity{
     @Id
     @GeneratedValue(generator = "UUID")

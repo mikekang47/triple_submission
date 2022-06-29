@@ -12,7 +12,8 @@ import java.util.UUID;
 @Getter
 @Entity
 @Setter
-@Table(name = "MILEAGE")
+@Builder
+@Table(name = "MILEAGE", indexes = @Index(name = "idx_mileage", columnList = "id, review.id"))
 public class Mileage extends BaseTimeEntity{
     @Id
     @GeneratedValue(generator = "UUID")
@@ -31,10 +32,22 @@ public class Mileage extends BaseTimeEntity{
     @JsonBackReference
     private Review review;
 
-    @Builder
+    @Column(name = "point")
+    @Builder.Default
+    private Integer point = 0;
+
+
     public Mileage(UUID id, String type, Review review) {
         this.id = id;
         this.type = type;
         this.review = review;
+        this.point = 0;
+    }
+
+    public Mileage(UUID id, String type, Review review, Integer point) {
+        this.id = id;
+        this.type = type;
+        this.review = review;
+        this.point = point;
     }
 }
