@@ -41,6 +41,7 @@ class MileageServiceTest {
 
 
 
+
     @BeforeEach
     void setUp() {
         mileageService = new MileageService(mileageRepository);
@@ -81,7 +82,7 @@ class MileageServiceTest {
                     .id(source.getId())
                     .review(source.getReview())
                     .type("REVIEW")
-                    .point(2)
+                    .point(source.getPoint())
                     .build();
         });
 
@@ -92,7 +93,7 @@ class MileageServiceTest {
     }
 
     @Test
-    @DisplayName("올바른 데이터로 마일리지를 생성하는 경우")
+    @DisplayName("올바른 데이터로 장소의 첫 리뷰를 생성하고, 길이 1이상의 콘텐츠, 빈 사진 리스트로 마일리지를 생성하는 경우 2점을 획득한다.")
     void createWithValidMileageData() {
         User user = new User(VALID_USER_ID, reviewList, 0);
         Place place = new Place(VALID_PLACE_ID, reviewList);
@@ -102,6 +103,26 @@ class MileageServiceTest {
 
         assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
         assertThat(mileage.getPoint()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("올바른 데이터로 장소의 두번째 리뷰를 생성하고, 길이 1이상의 콘텐츠, 빈 사진 리스트로 마일리지를 생성하는 경우 1을 획득한다.")
+    void createWithValidMileageDataWithContent() {
+        List<Review> reviewLists = new ArrayList<>();
+        Review source = Review.builder()
+                .id(UUID.fromString("2e4baf1c-5acb-4efb-a1af-eddada31b00f"))
+                .content("good")
+                .build();
+
+        reviewLists.add(source);
+        User user = new User(VALID_USER_ID, reviewList, 0);
+        Place place = new Place(VALID_PLACE_ID, reviewLists);
+        Review review = new Review(VALID_REVIEW_ID, VALID_CONTENT, user, place, photoList);
+
+        Mileage mileage = mileageService.createMileage(user, review, place, photoList, VALID_CONTENT);
+
+        assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
+        assertThat(mileage.getPoint()).isEqualTo(1);
     }
 
     @Test
