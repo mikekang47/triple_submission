@@ -2,21 +2,23 @@ package com.sihookang.triple_submission.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Entity
-@Table(name = "REVIEW", indexes = {@Index(name = "idx_review", columnList = "id, user.id, place.id")})
-public class Review {
+@Table(name = "REVIEW", indexes = {@Index(name = "idx_review", columnList = "review_id, user_id, place_id")})
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "REVIEW_ID", nullable = false, columnDefinition = "BINARY(16)")
@@ -26,21 +28,25 @@ public class Review {
     )
     private UUID id;
 
+    @NotNull
     @Column(name = "CONTENT")
     private String content;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "USER_ID")
     @JsonBackReference
     private User user;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "PLACE_ID")
     @JsonBackReference
     private Place place;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "review")
     @JsonManagedReference
+    @NotNull
     private List<AttachedPhoto> attachedPhotoList = new ArrayList<>();
 
     @Builder

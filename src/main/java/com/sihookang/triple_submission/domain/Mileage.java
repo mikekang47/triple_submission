@@ -5,15 +5,16 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Entity
 @Setter
 @Builder
-@Table(name = "MILEAGE", indexes = @Index(name = "idx_mileage", columnList = "id, review.id"))
+@Table(name = "MILEAGE", indexes = @Index(name = "idx_mileage", columnList = "id, review_id"))
 public class Mileage extends BaseTimeEntity{
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,16 +25,19 @@ public class Mileage extends BaseTimeEntity{
     )
     private UUID id;
 
+    @NotNull
     @Column(name = "type")
     private String type;
 
     @OneToOne
     @JoinColumn(name = "REVIEW_ID")
     @JsonBackReference
+    @NotNull
     private Review review;
 
     @Column(name = "point")
     @Builder.Default
+    @NotNull
     private Integer point = 0;
 
 

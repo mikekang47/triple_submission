@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 
@@ -12,9 +13,9 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "ATTACHED_PHOTO", indexes = {
-        @Index(name = "idx__photo", columnList = "id, review.id")
+        @Index(name = "idx__photo", columnList = "attached_id, review_id")
 })
-public class AttachedPhoto extends BaseTimeEntity{
+public class AttachedPhoto extends BaseTimeEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "ATTACHED_ID", nullable = false, columnDefinition = "BINARY(16)")
@@ -27,6 +28,7 @@ public class AttachedPhoto extends BaseTimeEntity{
     @ManyToOne
     @JoinColumn(name = "REVIEW_ID")
     @JsonBackReference
+    @NotNull
     private Review review;
 
     @Builder
