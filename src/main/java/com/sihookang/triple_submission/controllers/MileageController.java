@@ -55,13 +55,14 @@ public class MileageController {
             throw new ContentNotMatchException();
         }
         String action = mileageData.getAction();
+        String content = mileageData.getContent();
 
         switch (action) {
             case "ADD":
-                mileageService.createMileage(user, review, place, photoList);
+                mileageService.createMileage(user, review, place, photoList, content);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             case "MOD":
-                mileageService.modifyMileage(user, review, place, photoList);
+                mileageService.modifyMileage(user, review, place, photoList, content);
                 return new ResponseEntity<>(HttpStatus.OK);
             case "DELETE":
                 mileageService.deleteMileage(user, review, place);

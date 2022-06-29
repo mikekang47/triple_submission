@@ -6,6 +6,7 @@ import com.sihookang.triple_submission.errors.MileageAlreadyExistsException;
 import com.sihookang.triple_submission.errors.MileageNotFoundException;
 import com.sihookang.triple_submission.infra.MileageRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,7 +33,7 @@ public class MileageService {
     }
 
 
-    public Mileage createMileage(User user, Review review, Place place, List<AttachedPhoto> photoList) {
+    public Mileage createMileage(User user, Review review, Place place, List<AttachedPhoto> photoList, String content) {
         if(user.getId() != review.getUser().getId() || place.getId() != review.getPlace().getId()) {
             throw new IdNotMatchException();
         }
@@ -40,10 +41,11 @@ public class MileageService {
         if(checkMileage(review.getId())) {
             throw new MileageAlreadyExistsException();
         }
+
         int point = 0;
         Mileage mileage = new Mileage();
 
-        if(review.getContent().length() >= 1) {
+        if(content.length() >= 1) {
             log.info("사용자 {}의 포인트가 컨텐츠 길이로 인해 1 증가 했습니다.", user.getId());
             point += 1;
         }
@@ -52,7 +54,8 @@ public class MileageService {
             point += 1;
         }
 
-        if(place.getReviewList().size() == 1) {
+        if(place.getReviewList().size() == 0) {
+            log.info("사용자 {}의 포인트가 첫 리뷰로 인해 개수로 인해 1 증가 했습니다.", user.getId());
             point += 1;
         }
 
@@ -64,30 +67,46 @@ public class MileageService {
     }
 
 
-    public Mileage modifyMileage(User user, Review review, Place place, List<AttachedPhoto> photoList) {
+    public Mileage modifyMileage(User user, Review review, Place place, List<AttachedPhoto> photoList, String content) {
         Mileage mileage = findMileage(review.getId());
         Integer point = user.getPoint();
         Integer mileagePoint = mileage.getPoint();
 
-        if(photoList.size() <= 0) {
-           point -= 1;
-           mileagePoint -= 1;
+        if(review.getAttachedPhotoList().size() >= 1 && photoList.size() == 0) {
+            point -= 1;
+            mileagePoint -= 1;
             log.info("사용자 {}의 포인트가 첨부 사진 개수 변경으로 인해 1 감소 했습니다.", user.getId());
         }
 
-        if(review.getContent().length() <= 1) {
+        if(review.getAttachedPhotoList().size() == 0 && photoList.size() >= 1) {
+            point += 1;
+            mileagePoint += 1;
+            log.info("사용자 {}의 포인트가 첨부 사진 개수 변경으로 인해 1 증가 했습니다.", user.getId());
+        }
+
+        if(review.getContent().length() == 0 && content.length() >= 1) {
+            point += 1;
+            log.info("사용자 {}의 포인트가 리뷰 내용 길이 변경으로 인해 1 증가 했습니다.", user.getId());
+            mileagePoint += 1;
+        }
+
+        if(review.getContent().length() >= 1 && content.length() == 0) {
             point -= 1;
             log.info("사용자 {}의 포인트가 리뷰 내용 길이 변경으로 인해 1 감소 했습니다.", user.getId());
             mileagePoint -= 1;
         }
 
+
         user.setPoint(point);
+
+        review.setContent(content);
         review.setUser(user);
         review.setAttachedPhotoList(photoList);
         review.setPlace(place);
+
         mileage.setReview(review);
         mileage.setPoint(mileagePoint);
-        
+
         return mileage;
     }
 
