@@ -23,14 +23,12 @@ public class MileageService {
         this.mileageRepository = mileageRepository;
     }
 
-    /**
-     * 마일리지를 생성합니다.
-     * @return
-     * @param user
-     * @param review
-     * @param place
-     * @param photoList
-     */
+    public Mileage getMileage(UUID id) {
+        return mileageRepository.findById(id)
+                .orElseThrow(MileageNotFoundException::new);
+    }
+
+
     public Mileage createMileage(User user, Review review, Place place, List<AttachedPhoto> photoList) {
         if(user.getId() != review.getUser().getId() || place.getId() != review.getPlace().getId()) {
             throw new IdNotMatchException();
@@ -39,18 +37,22 @@ public class MileageService {
         if(checkMileage(review.getId())) {
             throw new MileageAlreadyExistsException();
         }
+        int point = 0;
+        Mileage mileage = new Mileage();
 
         if(review.getContent().length() >= 1) {
-            user.setPoint(user.getPoint() + 1);
+           point += 1;
         }
         if(photoList.size() >= 1) {
-            user.setPoint(user.getPoint() + 1);
-        }
-        if(place.getReviewList().size() == 1) {
-            user.setPoint(user.getPoint() + 1);
+            point += 1;
         }
 
-        Mileage mileage = new Mileage();
+        if(place.getReviewList().size() == 1) {
+            point += 1;
+        }
+
+        user.setPoint(point);
+        mileage.setPoint(point);
         mileage.setReview(review);
         mileage.setType("REVIEW");
         return mileageRepository.save(mileage);
@@ -59,40 +61,49 @@ public class MileageService {
 
     public Mileage modifyMileage(User user, Review review, Place place, List<AttachedPhoto> photoList) {
         Mileage mileage = findMileage(review.getId());
+        Integer point = user.getPoint();
+        Integer mileagePoint = mileage.getPoint();
         if(photoList.size() <= 0) {
-            user.setPoint(user.getPoint() - 1);
+           point -= 1;
+           mileagePoint -= 1;
         }
         if(place.getReviewList().size() == 1) {
-            user.setPoint(user.getPoint() + 1);
+            point -= 1;
+            mileagePoint -= 1;
         }
+        user.setPoint(point);
         review.setUser(user);
         review.setAttachedPhotoList(photoList);
         review.setPlace(place);
         mileage.setReview(review);
+        mileage.setPoint(mileagePoint);
+        
         return mileage;
     }
 
     public void deleteMileage(User user, Review review, Place place) {
+        Integer point = user.getPoint();
         if(review.getAttachedPhotoList().size() >= 1) {
-            user.setPoint(user.getPoint() - 1);
+            point -= 1;
         }
 
         if(place.getReviewList().size() <= 1) {
-            user.setPoint(user.getPoint()-1);
+           point -= 1;
         }
-
+        user.setPoint(point);
         mileageRepository.deleteByReviewId(review.getId());
     }
 
     private Mileage findMileage(UUID reviewId) {
         return mileageRepository.findByReviewId(reviewId)
-                .orElseThrow(() -> new MileageNotFoundException());
+                .orElseThrow(MileageNotFoundException::new);
     }
 
     private boolean checkMileage(UUID reviewId) {
         return mileageRepository.existsByReviewId(reviewId);
 
     }
+
 
 
 }
