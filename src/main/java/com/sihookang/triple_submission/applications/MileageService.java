@@ -5,13 +5,10 @@ import com.sihookang.triple_submission.errors.IdNotMatchException;
 import com.sihookang.triple_submission.errors.MileageAlreadyExistsException;
 import com.sihookang.triple_submission.errors.MileageNotFoundException;
 import com.sihookang.triple_submission.infra.MileageRepository;
-import org.hibernate.resource.beans.internal.FallbackBeanInstanceProducer;
-import org.hibernate.type.TrueFalseType;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**

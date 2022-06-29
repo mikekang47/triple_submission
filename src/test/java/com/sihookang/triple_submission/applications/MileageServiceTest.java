@@ -25,9 +25,7 @@ class MileageServiceTest {
     private final PlaceRepository placeRepository = mock(PlaceRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
-
-    private final UUID VALID_ID = UUID.fromString("240a0658-dc5f-4878-9381-ebb7b2667772");
-    private final UUID INVALID_ID = UUID.fromString("340a0658-dc5f-4878-9381-ebb7b2667772");
+    
     private final UUID VALID_USER_ID = UUID.fromString("13ac5c4a-de7a-4fa9-aca2-b79fa8b8c46e");
     private final UUID VALID_PLACE_ID = UUID.fromString("347b2197-849c-4c61-8696-9c16b4640e31");
     private final String VALID_CONTENT = "Like!";
@@ -79,7 +77,7 @@ class MileageServiceTest {
     void createWithValidMileageData() {
         User user = new User(VALID_USER_ID, reviewList, 0);
         Place place = new Place(VALID_PLACE_ID, reviewList);
-        Review review = new Review(VALID_REVIEW_ID, "LIKE!", user, place, photoList);
+        Review review = new Review(VALID_REVIEW_ID, VALID_CONTENT, user, place, photoList);
         
         Mileage mileage = mileageService.createMileage(user, review, place, photoList);
 

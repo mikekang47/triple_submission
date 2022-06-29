@@ -21,7 +21,8 @@ import static org.mockito.Mockito.mock;
 
 class PlaceServiceTest {
     private PlaceService placeService;
-    private PlaceRepository placeRepository = mock(PlaceRepository.class);
+
+    private final PlaceRepository placeRepository = mock(PlaceRepository.class);
 
     private final UUID VALID_ID = UUID.fromString("2e4baf1c-5acb-4efb-a1af-eddada31b00f");
     private final UUID INVALID_ID = UUID.fromString("3e4baf1c-5acb-4efb-a1af-eddada31b00f");
