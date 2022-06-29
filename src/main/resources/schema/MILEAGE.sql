@@ -1,6 +1,6 @@
 create table `MILEAGE`(
     `id` BINARY(16) NOT NULL,
-    `type` varchar(30) NOT NULL,
+    `type` varchar(255) NOT NULL,
     `point` int NOT NULL,
     `review_id` BINARY(16) NOT null,
     `create_at` datetime(6) NOT NULL,
