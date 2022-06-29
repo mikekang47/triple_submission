@@ -101,12 +101,14 @@ class MileageControllerTest {
                     .build();
         });
 
-        given(mileageService.getMileage(VALID_MILEAGE_ID)).willReturn(mileage);
+        mileageService.deleteMileage(any(User.class), any(Review.class), any(Place.class));
 
+        given(mileageService.getMileage(VALID_MILEAGE_ID)).willReturn(mileage);
 
     }
 
     @Test
+    @DisplayName("올바른 타입으로 마일리지 생성시 200을 반환한다.")
     void createMileage() throws Exception {
         mvc.perform(post("/events")
                         .accept(MediaType.APPLICATION_JSON)
@@ -128,7 +130,7 @@ class MileageControllerTest {
     }
 
     @Test
-    @DisplayName("올바르지 않은 타입으로 마일리지를 생성 요청시 타입 에러를 발생시킨다.")
+    @DisplayName("올바르지 않은 타입으로 마일리지를 생성 요청시 타입 에러를 발생시키고 400을 반환한다.")
     void createWithInvalidType() throws Exception {
         mvc.perform(post("/events")
                         .accept(MediaType.APPLICATION_JSON)
@@ -163,9 +165,28 @@ class MileageControllerTest {
                         "\"placeId\": \"2e4baf1c-5acb-4efb-a1af-eddada31b00f\"" +
                         "}")
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
+    @Test
+    @DisplayName("존재하는 마일리지 삭제시 204를 반환한다.")
+    void deleteMileage() throws Exception {
+        mvc.perform(post("/events")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"type\": \"REVIEW\"," +
+                                "\"action\": \"DELETE\", " +
+                                "\"reviewId\": \"240a0658-dc5f-4878-9381-ebb7b2667772\"," +
+                                "\"content\": \"like!\"," +
+                                "\"attachedPhotoIds\": [\"e4d1a64e-a531-46de-88d0-ff0ed70c0bb8\"]," +
+                                "\"userId\": \"3ede0ef2-92b7-4817-a5f3-0c575361f745\"," +
+                                "\"placeId\": \"2e4baf1c-5acb-4efb-a1af-eddada31b00f\"" +
+                                "}")
+                )
+                .andExpect(status().isNoContent());
+
+    }
 
     @Test
     @DisplayName("존재하는 마일리지의 id로 포인트를 조회하는 경우 포인트를 반환한다.")

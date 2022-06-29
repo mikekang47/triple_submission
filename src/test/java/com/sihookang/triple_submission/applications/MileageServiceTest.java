@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class MileageServiceTest {
@@ -145,5 +146,17 @@ class MileageServiceTest {
 
         assertThat(mileage.getReview().getContent()).isEqualTo("");
         assertThat(user.getPoint()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("올바른 데이터로 마일리지를 삭제하는 경우")
+    void deleteWithValidData() {
+        User user = new User(VALID_USER_ID, reviewList, 2);
+        Place place = new Place(VALID_PLACE_ID, reviewList);
+        Review review = new Review(VALID_REVIEW_ID, VALID_CONTENT, user, place, photoList);
+
+        mileageService.deleteMileage(user, review, place);
+
+        verify(mileageRepository).deleteByReviewId(review.getId());
     }
 }

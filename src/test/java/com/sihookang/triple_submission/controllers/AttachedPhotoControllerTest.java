@@ -3,6 +3,7 @@ package com.sihookang.triple_submission.controllers;
 import com.sihookang.triple_submission.applications.AttachedPhotoService;
 import com.sihookang.triple_submission.domain.AttachedPhoto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,6 +35,7 @@ class AttachedPhotoControllerTest {
     }
 
     @Test
+    @DisplayName("올바른 id로 사진을 조회하면 id와 일치하는 사진 객체 반환한다.")
     void getPhotoWithValidId() throws Exception {
         mvc.perform(get("/photos/"+VALID_ID))
                 .andExpect(status().isOk());

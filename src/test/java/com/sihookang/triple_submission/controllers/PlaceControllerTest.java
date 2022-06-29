@@ -3,6 +3,7 @@ package com.sihookang.triple_submission.controllers;
 import com.sihookang.triple_submission.applications.PlaceService;
 import com.sihookang.triple_submission.domain.Place;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,6 +41,7 @@ class PlaceControllerTest {
     }
 
     @Test
+    @DisplayName("올바른 id로 장소를 조회하는 경우 객체를 반환한다.")
     void getPlaceWithValidId() throws Exception {
         mvc.perform(get("/places/"+VALID_ID))
                 .andExpect(content().string(containsString("2e4baf1c-5acb-4efb-a1af-eddada31b00f")))
@@ -47,6 +49,7 @@ class PlaceControllerTest {
     }
 
     @Test
+    @DisplayName("장소를 생성하는 경우 장소를 반환한다.")
     void createPlace() throws Exception{
         mvc.perform(post("/places"))
                 .andExpect(status().isCreated());

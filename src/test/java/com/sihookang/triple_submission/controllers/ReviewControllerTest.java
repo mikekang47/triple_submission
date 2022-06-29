@@ -9,6 +9,7 @@ import com.sihookang.triple_submission.domain.Place;
 import com.sihookang.triple_submission.domain.Review;
 import com.sihookang.triple_submission.domain.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -62,6 +63,7 @@ class ReviewControllerTest {
     }
 
     @Test
+    @DisplayName("올바른 데이터로 리뷰를 생성할 경우")
     void createWithValidData() throws Exception {
         mvc.perform(post("/reviews")
                         .accept(MediaType.APPLICATION_JSON)

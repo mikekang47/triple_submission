@@ -81,7 +81,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    @DisplayName("올바르지 않은 ID로 리뷰를 조회하면 에러를 발생시킨다..")
+    @DisplayName("올바르지 않은 ID로 리뷰를 조회하면 에러를 발생시킨다.")
     void getReviewWithInvalidId() {
         assertThatThrownBy(() -> reviewService.getReview(INVALID_ID))
                 .isInstanceOf(ReviewNotFoundException.class);
