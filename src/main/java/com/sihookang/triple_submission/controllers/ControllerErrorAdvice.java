@@ -73,4 +73,23 @@ public class ControllerErrorAdvice {
         return new ErrorResponse("Id Not Match");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MileageAlreadyExistsException.class)
+    public ErrorResponse handleMileageAlreadyExistsException() {
+        return new ErrorResponse("Mileage already exists");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ContentNotMatchException.class)
+    public ErrorResponse handleContentNotMatchException() {
+        return new ErrorResponse("Content not match");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(MileageNotFoundException.class)
+    public ErrorResponse handleMileageNotFoundException() {
+        return new ErrorResponse("Mileage not found");
+    }
+
+
 }
