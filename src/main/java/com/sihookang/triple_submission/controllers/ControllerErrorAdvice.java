@@ -61,5 +61,35 @@ public class ControllerErrorAdvice {
         return new ErrorResponse("Review not found");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ActionNotFoundException.class)
+    public ErrorResponse handleActionNotFoundException() {
+        return new ErrorResponse("Action not found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IdNotMatchException.class)
+    public ErrorResponse handleIdNotMatchException() {
+        return new ErrorResponse("Id Not Match");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MileageAlreadyExistsException.class)
+    public ErrorResponse handleMileageAlreadyExistsException() {
+        return new ErrorResponse("Mileage already exists");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ContentNotMatchException.class)
+    public ErrorResponse handleContentNotMatchException() {
+        return new ErrorResponse("Content not match");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(MileageNotFoundException.class)
+    public ErrorResponse handleMileageNotFoundException() {
+        return new ErrorResponse("Mileage not found");
+    }
+
 
 }

@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -37,6 +38,8 @@ class PlaceServiceTest {
         
         given(placeRepository.findById(VALID_ID)).willReturn(Optional.of(place));
 
+        given(placeRepository.save(any(Place.class))).willReturn(place);
+
 
     }
 
@@ -51,6 +54,13 @@ class PlaceServiceTest {
     void getPlaceWithInvalidId() {
         assertThatThrownBy(() -> placeService.getPlace(INVALID_ID))
                 .isInstanceOf(PlaceNotFoundException.class);
+    }
+
+    @Test
+    void createPlace() {
+        Place place = placeService.createPlace();
+
+        assertThat(place.getReviewList()).isEmpty();
     }
 
 }

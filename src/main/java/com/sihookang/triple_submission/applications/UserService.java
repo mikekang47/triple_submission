@@ -5,6 +5,8 @@ import com.sihookang.triple_submission.errors.UserNotFoundException;
 import com.sihookang.triple_submission.infra.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,4 +29,9 @@ public class UserService {
         return userRepository.findById(valid_id)
                 .orElseThrow(() -> new UserNotFoundException(valid_id));
     }
+
+    public User createUser() {
+        return userRepository.save(new User());
+    }
+    
 }

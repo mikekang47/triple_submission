@@ -16,6 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -40,6 +41,8 @@ class UserServiceTest {
 
         given(userRepository.findById(DELETED_ID)).willThrow(UserNotFoundException.class);
 
+        given(userRepository.save(any(User.class))).willReturn(user);
+
     }
 
     @Test
@@ -63,5 +66,13 @@ class UserServiceTest {
     void getUserWithDeletedId() {
         assertThatThrownBy(() -> userService.getUser(DELETED_ID))
                 .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("사용자를 생성하면 객체를 반환한다.")
+    void createUser() {
+        User user = userService.createUser();
+
+        assertThat(user.getPoint()).isEqualTo(0);
     }
 }
