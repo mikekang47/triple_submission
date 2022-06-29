@@ -34,6 +34,12 @@ public class User {
     @Builder.Default
     private Integer point = 0;
 
+    public User(UUID id, List<Review> reviewList) {
+        this.id = id;
+        this.reviewList = reviewList;
+        this.point = 0;
+    }
+
     public void addReview(Review review) {
         this.reviewList.add(review);
 
