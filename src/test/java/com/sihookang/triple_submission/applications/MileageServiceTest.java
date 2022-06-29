@@ -25,7 +25,8 @@ class MileageServiceTest {
     private final PlaceRepository placeRepository = mock(PlaceRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
-    
+
+    private final UUID VALID_MILEAGE_ID = UUID.fromString("afb0cef2-851d-4a50-bb07-9cc15cbdc332");
     private final UUID VALID_USER_ID = UUID.fromString("13ac5c4a-de7a-4fa9-aca2-b79fa8b8c46e");
     private final UUID VALID_PLACE_ID = UUID.fromString("347b2197-849c-4c61-8696-9c16b4640e31");
     private final String VALID_CONTENT = "Like!";
@@ -57,6 +58,13 @@ class MileageServiceTest {
                 .user(user)
                 .build();
 
+        Mileage mileage = Mileage.builder()
+                .id(VALID_MILEAGE_ID)
+                .review(review)
+                .type("REVIEW")
+                .point(2)
+                .build();
+
         given(userRepository.findById(VALID_USER_ID)).willReturn(Optional.of(user));
         given(placeRepository.findById(VALID_PLACE_ID)).willReturn(Optional.of(place));
         given(reviewRepository.findById(VALID_REVIEW_ID)).willReturn(Optional.of(review));
@@ -71,6 +79,7 @@ class MileageServiceTest {
                     .build();
         });
 
+        given(mileageRepository.findById(VALID_MILEAGE_ID)).willReturn(Optional.of(mileage));
     }
 
     @Test
@@ -86,4 +95,12 @@ class MileageServiceTest {
         assertThat(mileage.getPoint()).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("존재하는 id로 마일리지를 조회하는 경우 올바른 마일리지를 반환한다.")
+    void getMileageWithValidId() {
+        Mileage mileage = mileageService.getMileage(VALID_MILEAGE_ID);
+
+        assertThat(mileage.getPoint()).isEqualTo(2);
+        assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
+    }
 }
