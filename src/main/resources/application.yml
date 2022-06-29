@@ -1,19 +1,19 @@
 
 logging:
   level:
-    com.sihookang.triple_submission: error
-    com.sihookang.triple_submission.applictions: INFO
+    "[com.sihookang.triple_submission]": error
+    "[com.sihookang.triple_submission.applictions]": info
   pattern:
     console: '%d{yyyy-MM-DD HH:MM:ss.SSS} [%thread] %-5level [%C::%M %L] %logger{15} - %msg%n'
-  
+
 
 
 spring:
   datasource:
-    username: username
-    password: password
+    username: root
+    password: timetoshout11
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: url
+    url: jdbc:mysql://localhost:3306/test
     hikari:
       schema: classpath*:/schema/*.sql
   jpa:
@@ -21,5 +21,5 @@ spring:
       ddl-auto: none
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties:
-    show-sql: true
+    
+
