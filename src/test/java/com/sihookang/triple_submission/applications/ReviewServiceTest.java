@@ -16,7 +16,6 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -26,6 +25,7 @@ class ReviewServiceTest {
     private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PlaceRepository placeRepository = mock(PlaceRepository.class);
+
     private final UUID VALID_ID = UUID.fromString("240a0658-dc5f-4878-9381-ebb7b2667772");
     private final UUID INVALID_ID = UUID.fromString("340a0658-dc5f-4878-9381-ebb7b2667772");
     private final UUID VALID_USER_ID = UUID.fromString("13ac5c4a-de7a-4fa9-aca2-b79fa8b8c46e");
@@ -59,8 +59,8 @@ class ReviewServiceTest {
                 .build();
 
 
-
         given(userRepository.save(any(User.class))).willReturn(user);
+
         given(placeRepository.save(any(Place.class))).willReturn(place);
 
         given(reviewRepository.findById(VALID_ID)).willReturn(Optional.of(review));
@@ -77,7 +77,7 @@ class ReviewServiceTest {
         Review review = reviewService.getReview(VALID_ID);
 
         assertThat(review.getId()).isEqualTo(VALID_ID);
-        assertThat(review.getContent()).isEqualTo("좋아요");
+        assertThat(review.getContent()).isEqualTo("Like!");
     }
 
     @Test
