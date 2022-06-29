@@ -2,13 +2,15 @@ package com.sihookang.triple_submission.applications;
 
 import com.sihookang.triple_submission.domain.*;
 import com.sihookang.triple_submission.infra.MileageRepository;
+import com.sihookang.triple_submission.infra.PlaceRepository;
+import com.sihookang.triple_submission.infra.ReviewRepository;
+import com.sihookang.triple_submission.infra.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +22,9 @@ class MileageServiceTest {
     private MileageService mileageService;
 
     private final MileageRepository mileageRepository = mock(MileageRepository.class);
+    private final PlaceRepository placeRepository = mock(PlaceRepository.class);
+    private final UserRepository userRepository = mock(UserRepository.class);
+    private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
 
     private final UUID VALID_ID = UUID.fromString("240a0658-dc5f-4878-9381-ebb7b2667772");
     private final UUID INVALID_ID = UUID.fromString("340a0658-dc5f-4878-9381-ebb7b2667772");
@@ -31,65 +36,54 @@ class MileageServiceTest {
     private final List<Review> reviewList = new ArrayList<>();
 
 
+
     @BeforeEach
     void setUp() {
         mileageService = new MileageService(mileageRepository);
+        User user = User.builder()
+                .id(VALID_USER_ID)
+                .reviewList(Collections.emptyList())
+                .point(0)
+                .build();
 
-//        User user = User.builder()
-//                .id(VALID_USER_ID)
-//                .reviewList(reviewList)
-//                .build();
-//
-//        Place place = Place.builder()
-//                .id(VALID_PLACE_ID)
-//                .reviewList(reviewList)
-//                .build();
-//
-//        Review review = Review.builder()
-//                .id(VALID_REVIEW_ID)
-//                .place(place)
-//                .user(user)
-//                .attachedPhotoList(photoList)
-//                .build();
+        Place place = Place.builder()
+                .id(VALID_PLACE_ID)
+                .reviewList(Collections.emptyList())
+                .build();
 
+        Review review = Review.builder()
+                .id(VALID_REVIEW_ID)
+                .content(VALID_CONTENT)
+                .place(place)
+                .attachedPhotoList(photoList)
+                .user(user)
+                .build();
 
+        given(userRepository.findById(VALID_USER_ID)).willReturn(Optional.of(user));
+        given(placeRepository.findById(VALID_PLACE_ID)).willReturn(Optional.of(place));
+        given(reviewRepository.findById(VALID_REVIEW_ID)).willReturn(Optional.of(review));
+        
         given(mileageRepository.save(any(Mileage.class))).will(invocation -> {
             Mileage source = invocation.getArgument(0);
             return Mileage.builder()
-                    .id(VALID_ID)
+                    .id(source.getId())
                     .review(source.getReview())
-                    .type(source.getType())
+                    .type("REVIEW")
                     .build();
         });
 
     }
 
     @Test
+    @DisplayName("올바른 데이터로 마일리지를 생성하는 경우")
     void createWithValidMileageData() {
-        User user = User.builder()
-                .id(VALID_USER_ID)
-                .reviewList(reviewList)
-                .build();
-
-        Place place = Place.builder()
-                .id(VALID_PLACE_ID)
-                .reviewList(reviewList)
-                .build();
-
-        Review review = Review.builder()
-                .id(VALID_REVIEW_ID)
-                .place(place)
-                .user(user)
-                .attachedPhotoList(photoList)
-                .build();
-
-//        place.addReview(review);
-//        user.addReview(review);
+        User user = new User(VALID_USER_ID, reviewList, 0);
+        Place place = new Place(VALID_PLACE_ID, reviewList);
+        Review review = new Review(VALID_REVIEW_ID, "LIKE!", user, place, photoList);
         
         Mileage mileage = mileageService.createMileage(user, review, place, photoList);
 
         assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
-
-
     }
+
 }
