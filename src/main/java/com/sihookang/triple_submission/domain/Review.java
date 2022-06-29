@@ -81,4 +81,8 @@ public class Review {
             photo.setReview(this);
         }
     }
+
+    public void setAttachedPhotoList(List<AttachedPhoto> photoList) {
+        this.attachedPhotoList = photoList;
+    }
 }
