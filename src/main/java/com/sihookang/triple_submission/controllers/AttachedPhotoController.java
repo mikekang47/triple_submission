@@ -12,7 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/photos")
 public class AttachedPhotoController {
-    private AttachedPhotoService photoService;
+    private final AttachedPhotoService photoService;
 
     public AttachedPhotoController(AttachedPhotoService photoService) {
         this.photoService = photoService;
