@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Setter
 @Builder
-@Table(name = "MILEAGE")
+@Table(name = "MILEAGE", indexes = @Index(name = "idx_mileage", columnList = "id, review.id"))
 public class Mileage extends BaseTimeEntity{
     @Id
     @GeneratedValue(generator = "UUID")

@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "REVIEW")
+@Table(name = "REVIEW", indexes = {@Index(name = "idx_review", columnList = "id, user.id, place.id")})
 public class Review {
     @Id
     @GeneratedValue(generator = "UUID")
