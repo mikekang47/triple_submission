@@ -28,5 +28,10 @@ public class UserController {
         return userService.createUser();
     }
 
+    @GetMapping("/points/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getPoint(@PathVariable("id") UUID id) {
+        return userService.getUser(id).getPoint();
+    }
 
 }
