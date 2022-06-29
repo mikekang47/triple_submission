@@ -5,6 +5,7 @@ import com.sihookang.triple_submission.errors.IdNotMatchException;
 import com.sihookang.triple_submission.errors.MileageAlreadyExistsException;
 import com.sihookang.triple_submission.errors.MileageNotFoundException;
 import com.sihookang.triple_submission.infra.MileageRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,8 @@ import java.util.UUID;
 /**
  * Mileage에 관련한 내부 처리를 담당하고 있는 클래스 입니다.
  */
+
+@Slf4j
 @Service
 @Transactional
 public class MileageService {
@@ -41,9 +44,11 @@ public class MileageService {
         Mileage mileage = new Mileage();
 
         if(review.getContent().length() >= 1) {
-           point += 1;
+            log.info("사용자 {}의 포인트가 컨텐츠 길이로 인해 1 증가 했습니다.", user.getId());
+            point += 1;
         }
         if(photoList.size() >= 1) {
+            log.info("사용자 {}의 포인트가 첨부 사진 개수로 인해 1 증가 했습니다.", user.getId());
             point += 1;
         }
 
@@ -63,14 +68,19 @@ public class MileageService {
         Mileage mileage = findMileage(review.getId());
         Integer point = user.getPoint();
         Integer mileagePoint = mileage.getPoint();
+
         if(photoList.size() <= 0) {
            point -= 1;
            mileagePoint -= 1;
+            log.info("사용자 {}의 포인트가 첨부 사진 개수 변경으로 인해 1 감소 했습니다.", user.getId());
         }
-        if(place.getReviewList().size() == 1) {
+
+        if(review.getContent().length() <= 1) {
             point -= 1;
+            log.info("사용자 {}의 포인트가 리뷰 내용 길이 변경으로 인해 1 감소 했습니다.", user.getId());
             mileagePoint -= 1;
         }
+
         user.setPoint(point);
         review.setUser(user);
         review.setAttachedPhotoList(photoList);
@@ -84,11 +94,19 @@ public class MileageService {
     public void deleteMileage(User user, Review review, Place place) {
         Integer point = user.getPoint();
         if(review.getAttachedPhotoList().size() >= 1) {
+            log.info("사용자 {}의 포인트가 사진 삭제로 인해 1 감소 했습니다.", user.getId());
             point -= 1;
         }
 
         if(place.getReviewList().size() <= 1) {
-           point -= 1;
+            log.info("사용자 {}의 포인트가 첫 장소 리뷰 삭제로 인해 1 감소 했습니다.", user.getId());
+            point -= 1;
+        }
+
+
+        if(review.getContent().length() >= 1) {
+            log.info("사용자 {}의 포인트가 리뷰 내용 삭제로 인해 1 감소 했습니다.", user.getId());
+            point -= 1;
         }
         user.setPoint(point);
         mileageRepository.deleteByReviewId(review.getId());
