@@ -29,4 +29,9 @@ public class AttachedPhotoService {
         return ids.stream().map(id -> attachedPhotoRepository.findById(id)
                 .orElseThrow(() -> new PhotoNotFoundException(id))).collect(Collectors.toList());
     }
+
+    public AttachedPhoto getPhoto(UUID id) {
+        return attachedPhotoRepository.findById(id)
+                .orElseThrow(() -> new PhotoNotFoundException(id));
+    }
 }
