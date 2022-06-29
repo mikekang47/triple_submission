@@ -83,18 +83,21 @@ class MileageControllerTest {
                 .point(2)
                 .build();
         
-        given(mileageService.createMileage(any(User.class), any(Review.class), any(Place.class), anyList())).willReturn(mileage);
+        given(mileageService.createMileage(any(User.class), any(Review.class), any(Place.class), anyList(), any(String.class)))
+                .willReturn(mileage);
+
         given(userService.getUser(VALID_USER_ID)).willReturn(user);
         given(placeService.getPlace(VALID_PLACE_ID)).willReturn(place);
         given(reviewService.getReview(VALID_REVIEW_ID)).willReturn(review);
         given(attachedPhotoService.getPhotos(VALID_PHOTO_ID_LIST)).willReturn(List.of(photo));
 
-        given(mileageService.modifyMileage(any(User.class), any(Review.class), any(Place.class), anyList())).will(invocation -> {
+        given(mileageService.modifyMileage(any(User.class), any(Review.class), any(Place.class), anyList(), any(String.class))).will(invocation -> {
             Review sourceReview = invocation.getArgument(1);
             return Mileage.builder()
                     .id(VALID_MILEAGE_ID)
                     .review(sourceReview)
                     .type("REVIEW")
+                    .point(1)
                     .build();
         });
 
@@ -120,7 +123,7 @@ class MileageControllerTest {
                 )
                 .andExpect(status().isCreated());
 
-        verify(mileageService).createMileage(any(User.class), any(Review.class), any(Place.class), anyList());
+        verify(mileageService).createMileage(any(User.class), any(Review.class), any(Place.class), anyList(), any(String.class));
 
     }
 
@@ -155,7 +158,7 @@ class MileageControllerTest {
                         "\"action\": \"MOD\", " +
                         "\"reviewId\": \"240a0658-dc5f-4878-9381-ebb7b2667772\"," +
                         "\"content\": \"like!\"," +
-                        "\"attachedPhotoIds\": []," +
+                        "\"attachedPhotoIds\": [\"240a0658-dc5f-4878-9381-ebb7b2667772\"]," +
                         "\"userId\": \"3ede0ef2-92b7-4817-a5f3-0c575361f745\"," +
                         "\"placeId\": \"2e4baf1c-5acb-4efb-a1af-eddada31b00f\"" +
                         "}")

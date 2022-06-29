@@ -8,9 +8,12 @@ import com.sihookang.triple_submission.infra.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +22,8 @@ import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 class MileageServiceTest {
+    Logger log = LoggerFactory.getLogger(MileageService.class);
+
     private MileageService mileageService;
 
     private final MileageRepository mileageRepository = mock(MileageRepository.class);
@@ -64,11 +69,12 @@ class MileageServiceTest {
                 .type("REVIEW")
                 .point(2)
                 .build();
+        
 
         given(userRepository.findById(VALID_USER_ID)).willReturn(Optional.of(user));
         given(placeRepository.findById(VALID_PLACE_ID)).willReturn(Optional.of(place));
         given(reviewRepository.findById(VALID_REVIEW_ID)).willReturn(Optional.of(review));
-        
+
         given(mileageRepository.save(any(Mileage.class))).will(invocation -> {
             Mileage source = invocation.getArgument(0);
             return Mileage.builder()
@@ -79,7 +85,10 @@ class MileageServiceTest {
                     .build();
         });
 
+        given(mileageRepository.findByReviewId(VALID_REVIEW_ID)).willReturn(Optional.of(mileage));
+        
         given(mileageRepository.findById(VALID_MILEAGE_ID)).willReturn(Optional.of(mileage));
+
     }
 
     @Test
@@ -89,7 +98,7 @@ class MileageServiceTest {
         Place place = new Place(VALID_PLACE_ID, reviewList);
         Review review = new Review(VALID_REVIEW_ID, VALID_CONTENT, user, place, photoList);
         
-        Mileage mileage = mileageService.createMileage(user, review, place, photoList);
+        Mileage mileage = mileageService.createMileage(user, review, place, photoList, VALID_CONTENT);
 
         assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
         assertThat(mileage.getPoint()).isEqualTo(2);
@@ -102,5 +111,18 @@ class MileageServiceTest {
 
         assertThat(mileage.getPoint()).isEqualTo(2);
         assertThat(mileage.getReview().getId()).isEqualTo(VALID_REVIEW_ID);
+    }
+
+    @Test
+    @DisplayName("올바른 데이터로 마일리지를 수정하는 경우 수정 된 객체를 반환한다.")
+    void updateWithValidData() {
+        User user = new User(VALID_USER_ID, reviewList, 2);
+        Place place = new Place(VALID_PLACE_ID, reviewList);
+        Review review = new Review(VALID_REVIEW_ID, VALID_CONTENT, user, place, photoList);
+
+        Mileage mileage = mileageService.modifyMileage(user, review, place, photoList, "");
+
+        assertThat(mileage.getReview().getContent()).isEqualTo("");
+        assertThat(user.getPoint()).isEqualTo(1);
     }
 }
