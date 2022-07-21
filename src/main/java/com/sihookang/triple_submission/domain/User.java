@@ -28,7 +28,7 @@ public class User extends BaseTimeEntity {
     )
     private UUID id;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",  orphanRemoval = true)
     @Builder.Default
     @JsonManagedReference
     @NotNull

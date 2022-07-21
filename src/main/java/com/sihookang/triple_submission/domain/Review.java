@@ -44,7 +44,7 @@ public class Review extends BaseTimeEntity {
     @JsonBackReference
     private Place place;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "review")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "review",  orphanRemoval = true)
     @JsonManagedReference
     @NotNull
     private List<AttachedPhoto> attachedPhotoList = new ArrayList<>();
