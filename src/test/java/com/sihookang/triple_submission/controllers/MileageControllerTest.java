@@ -165,7 +165,7 @@ class MileageControllerTest {
                         "\"placeId\": \"2e4baf1c-5acb-4efb-a1af-eddada31b00f\"" +
                         "}")
         )
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
